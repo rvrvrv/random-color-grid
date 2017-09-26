@@ -35,7 +35,7 @@ class ColorBox extends React.Component {
   }
 }
 
-const ColorGrid = props =>
+const ColorGrid = ({ colors }) =>
   (<div
     className="color-grid"
     style={{
@@ -44,7 +44,7 @@ const ColorGrid = props =>
       width: '100vw',
     }}
   >
-    {props.colors.map(color => <ColorBox bgColor={color} />)}
+    {colors.map(color => <ColorBox bgColor={color} />)}
   </div>);
 
 class ColorGridContainer extends React.Component {
@@ -57,6 +57,7 @@ class ColorGridContainer extends React.Component {
 
   constructor() {
     super();
+    this.timer = null;
     this.state = { colors: [] };
   }
 
@@ -72,7 +73,7 @@ class ColorGridContainer extends React.Component {
 
   // Randomly change a color every 300ms
   componentDidMount() {
-    setInterval(() => {
+    this.timer = setInterval(() => {
       this.setState((prevState) => {
         const newColors = prevState.colors.slice();
         newColors.splice(
@@ -83,6 +84,11 @@ class ColorGridContainer extends React.Component {
         return { colors: newColors };
       });
     }, 200);
+  }
+
+  // Clear timer upon unmount
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   render() {
